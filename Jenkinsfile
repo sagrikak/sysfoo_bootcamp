@@ -15,7 +15,7 @@ pipeline {
       }
     }
 
-    stage('package') {
+    stage('package&test') {
       parallel {
         stage('package') {
           steps {
