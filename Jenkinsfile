@@ -40,12 +40,11 @@ pipeline {
           }
 
         }
-    }
-
-    stage('archive') {
-      steps {
-        archiveArtifacts 'target/*.war'
-      }
+        stage('archive') {
+          steps {
+            archiveArtifacts 'target/*.war'
+          }
+        }
     }
 
   }
