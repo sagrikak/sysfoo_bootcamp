@@ -40,9 +40,15 @@ pipeline {
           }
 
         }
-        steps {
-          archiveArtifacts 'target/*.war'
-        }
+    }
+
+    stage('archive') {
+      when {
+        branch 'master'
+      }
+      steps {
+        archiveArtifacts 'target/*.war'
+      }
     }
 
   }
