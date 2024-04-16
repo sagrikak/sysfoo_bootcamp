@@ -24,6 +24,7 @@ pipeline {
 
     stage('archive') {
       steps {
+        echo 'step 4'
         archiveArtifacts 'target/*.war'
       }
     }
