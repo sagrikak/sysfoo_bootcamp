@@ -14,7 +14,8 @@ pipeline {
 				sh 'mvn clean test'
 			}
 		}
-		stage('package&test') {
+		when { branch pattern: "master", comparator: "EQUALS"} {
+			stage('package') {
 			parallel {
 				stage('package') {
 					steps {
@@ -36,6 +37,10 @@ pipeline {
 				}
 			}
 		}
+
+				
+		}
+
 		stage('archive') {
 			steps {
 				echo 'step 4'
