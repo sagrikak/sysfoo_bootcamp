@@ -16,9 +16,20 @@ pipeline {
     }
 
     stage('package') {
-      steps {
-        echo 'step 3'
-        sh 'mvn package -DskipTests'
+      parallel {
+        stage('package') {
+          steps {
+            echo 'step 3'
+            sh 'mvn package -DskipTests'
+          }
+        }
+
+        stage('test1') {
+          steps {
+            sleep 2
+          }
+        }
+
       }
     }
 
