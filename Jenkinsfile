@@ -40,8 +40,19 @@ pipeline {
     }
 
     stage('archive') {
-      steps {
-        archiveArtifacts 'target/*.war'
+      parallel {
+        stage('archive') {
+          steps {
+            archiveArtifacts 'target/*.war'
+          }
+        }
+
+        stage('email') {
+          steps {
+            mail(subject: 'Test Email', body: 'Test Body', to: 'sakhande@adobe.com')
+          }
+        }
+
       }
     }
 
