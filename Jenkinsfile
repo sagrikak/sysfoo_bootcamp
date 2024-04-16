@@ -30,6 +30,12 @@ pipeline {
           }
         }
 
+        stage('test2') {
+          steps {
+            sleep 2
+          }
+        }
+
       }
     }
 
