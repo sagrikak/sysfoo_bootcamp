@@ -16,27 +16,30 @@ pipeline {
     }
 
     stage('package&test') {
-      parallel {
-        stage('package') {
-          steps {
-            echo 'step 3'
-            sh 'mvn package -DskipTests'
-          }
+        when {
+          branch 'master'
         }
-
-        stage('test1') {
-          steps {
-            sleep 2
+        parallel {
+          stage('package') {
+            steps {
+              echo 'step 3'
+              sh 'mvn package -DskipTests'
+            }
           }
-        }
 
-        stage('test2') {
-          steps {
-            sleep 2
+          stage('test1') {
+            steps {
+              sleep 2
+            }
           }
-        }
 
-      }
+          stage('test2') {
+            steps {
+              sleep 2
+            }
+          }
+
+        }
     }
 
     stage('archive') {
