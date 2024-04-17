@@ -27,7 +27,10 @@ pipeline {
       }
     }
 
-    stage('package') {
+    stage('package&publish') {
+      // when {
+      //   branch 'master'
+      // }
       parallel {
         stage('package') {
           agent {
@@ -36,12 +39,10 @@ pipeline {
             }
 
           }
-          when {
-            branch 'master'
-          }
           steps {
             echo 'step 3'
             sh 'mvn package -DskipTests'
+            archiveArtifacts 'target/*.war'
           }
         }
 
@@ -62,22 +63,6 @@ pipeline {
 
       }
     }
-
-    stage('archive') {
-      agent {
-        docker {
-          image 'maven:3.6.3-jdk-11-slim'
-        }
-
-      }
-      when {
-        branch 'master'
-      }
-      steps {
-        archiveArtifacts 'target/*.war'
-      }
-    }
-
   }
   post {
     always {
