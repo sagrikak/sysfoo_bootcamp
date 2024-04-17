@@ -15,6 +15,12 @@ pipeline {
     }
 
     stage('test') {
+      agent {
+        docker {
+          image 'maven:3.6.3-jdk-11-slim'
+        }
+
+      }
       steps {
         echo 'step 2'
         sh 'mvn clean test'
@@ -22,6 +28,12 @@ pipeline {
     }
 
     stage('package&test') {
+      agent {
+        docker {
+          image 'maven:3.6.3-jdk-11-slim'
+        }
+
+      }
       when {
         branch 'master'
       }
@@ -49,6 +61,12 @@ pipeline {
     }
 
     stage('archive') {
+      agent {
+        docker {
+          image 'maven:3.6.3-jdk-11-slim'
+        }
+
+      }
       when {
         branch 'master'
       }
@@ -57,9 +75,6 @@ pipeline {
       }
     }
 
-  }
-  tools {
-    maven 'Maven3.6.3'
   }
   post {
     always {
