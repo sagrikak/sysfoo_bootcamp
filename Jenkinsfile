@@ -27,16 +27,17 @@ pipeline {
       }
     }
 
-    stage('package&test') {
-      when {
-        branch 'master'
-      }
+    stage('package') {
       parallel {
         stage('package') {
           agent {
             docker {
               image 'maven:3.6.3-jdk-11-slim'
             }
+
+          }
+          when {
+            branch 'master'
           }
           steps {
             echo 'step 3'
@@ -44,25 +45,18 @@ pipeline {
           }
         }
 
-        stage('test1') {
-          agent {
-            docker {
-              image 'maven:3.6.3-jdk-11-slim'
-            }
-          }
+        stage('Docker_bnp') {
+          agent any
           steps {
-            sleep 2
-          }
-        }
+            script {
+              docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin') {
+                def dockerImage = docker.build("sakhande581/sysfoo:v${env.BUILD_ID}", "./")
+                dockerImage.push()
+                dockerImage.push("latest")
+                dockerImage.push("dev")
+              }
+            }
 
-        stage('test2') {
-          agent {
-            docker {
-              image 'maven:3.6.3-jdk-11-slim'
-            }
-          }
-          steps {
-            sleep 2
           }
         }
 
