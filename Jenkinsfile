@@ -1,12 +1,13 @@
 pipeline {
-  agent {
-    docker {
-      image 'maven:3.6.3-jdk-11-slim'
-    }
-
-  }
+  agent none
   stages {
     stage('build') {
+      agent {
+        docker {
+          image 'maven:3.6.3-jdk-11-slim'
+        }
+
+      }
       steps {
         echo 'step 1'
         sh 'mvn compile'
@@ -14,51 +15,54 @@ pipeline {
     }
 
     stage('test') {
+      agent {
+        docker {
+          image 'maven:3.6.3-jdk-11-slim'
+        }
+
+      }
       steps {
         echo 'step 2'
         sh 'mvn clean test'
       }
     }
 
-    stage('package&test') {
+    stage('package&publish') {
       when {
         branch 'master'
       }
       parallel {
         stage('package') {
+          agent {
+            docker {
+              image 'maven:3.6.3-jdk-11-slim'
+            }
+
+          }
           steps {
             echo 'step 3'
             sh 'mvn package -DskipTests'
+            archiveArtifacts 'target/*.war'
           }
         }
 
-        stage('test1') {
+        stage('docker_bnp') {
+          agent any
           steps {
-            sleep 2
-          }
-        }
+            script {
+              docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin') {
+                def dockerImage = docker.build("sakhande581/sysfoo:v${env.BUILD_ID}", "./")
+                dockerImage.push()
+                dockerImage.push("latest")
+                dockerImage.push("dev")
+              }
+            }
 
-        stage('test2') {
-          steps {
-            sleep 2
           }
         }
 
       }
     }
-
-    stage('archive') {
-      when {
-        branch 'master'
-      }
-      steps {
-        archiveArtifacts 'target/*.war'
-      }
-    }
-
-  }
-  tools {
-    maven 'Maven3.6.3'
   }
   post {
     always {
