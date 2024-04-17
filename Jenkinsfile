@@ -28,9 +28,9 @@ pipeline {
     }
 
     stage('package&publish') {
-      // when {
-      //   branch 'master'
-      // }
+      when {
+        branch 'master'
+      }
       parallel {
         stage('package') {
           agent {
@@ -46,7 +46,7 @@ pipeline {
           }
         }
 
-        stage('Docker_bnp') {
+        stage('docker_bnp') {
           agent any
           steps {
             script {
