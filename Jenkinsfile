@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'jenkins-docker-1'
+      image 'docker:dind'
     }
 
   }
