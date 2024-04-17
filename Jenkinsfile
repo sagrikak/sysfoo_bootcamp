@@ -28,17 +28,16 @@ pipeline {
     }
 
     stage('package&test') {
-      agent {
-        docker {
-          image 'maven:3.6.3-jdk-11-slim'
-        }
-
-      }
       when {
         branch 'master'
       }
       parallel {
         stage('package') {
+          agent {
+            docker {
+              image 'maven:3.6.3-jdk-11-slim'
+            }
+          }
           steps {
             echo 'step 3'
             sh 'mvn package -DskipTests'
@@ -46,12 +45,22 @@ pipeline {
         }
 
         stage('test1') {
+          agent {
+            docker {
+              image 'maven:3.6.3-jdk-11-slim'
+            }
+          }
           steps {
             sleep 2
           }
         }
 
         stage('test2') {
+          agent {
+            docker {
+              image 'maven:3.6.3-jdk-11-slim'
+            }
+          }
           steps {
             sleep 2
           }
